@@ -1,10 +1,14 @@
 if CHCat == nil then
 	_G.CHCat = class({})
 end
+function CHCat:SendGamemodeStatus(message)
+    print("[CHCat] " .. message)
+end
 
 CHCat.required_modules = {
 	"utils/gamerules",
 	"utils/util",
+	"utils/events",
 }
 
 function Precache( context )
@@ -24,10 +28,15 @@ function Activate()
 end
 
 function CHCat:InitGameMode()
-	print( "[CHCat] Addon has been initialised!" )
+	CHCat:SendGamemodeStatus("Addon has been initialised!" )
 
-	print( "[CHCat] Finding Modules..." )
+	CHCat:SendGamemodeStatus("Finding Modules..." )
 	for _,module in pairs(self.required_modules) do
 		require(module)
+	end
+
+	if IsServer() then
+		self:InitGameRules()
+		self:InitGameEvents()
 	end
 end

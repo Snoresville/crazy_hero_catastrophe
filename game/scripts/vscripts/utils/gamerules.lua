@@ -1,5 +1,5 @@
-print("[CHCat] gamerules.lua loaded!")
+CHCat:SendGamemodeStatus("gamerules.lua loaded!")
 
-if IsServer() then
+function CHCat:InitGameRules()
     GameRules:SetUseUniversalShopMode(true)
 end
