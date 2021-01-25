@@ -3,8 +3,8 @@ if CHCat == nil then
 end
 
 CHCat.required_modules = {
-	"utils/gamerules"
-	"utils/util"
+	"utils/gamerules",
+	"utils/util",
 }
 
 function Precache( context )
