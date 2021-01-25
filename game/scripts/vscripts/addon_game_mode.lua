@@ -1,8 +1,11 @@
--- Generated from template
-
-if CAddonTemplateGameMode == nil then
-	CAddonTemplateGameMode = class({})
+if CHCat == nil then
+	_G.CHCat = class({})
 end
+
+CHCat.required_modules = {
+	"utils/gamerules"
+	"utils/util"
+}
 
 function Precache( context )
 	--[[
@@ -16,21 +19,15 @@ end
 
 -- Create the game mode when we activate
 function Activate()
-	GameRules.AddonTemplate = CAddonTemplateGameMode()
-	GameRules.AddonTemplate:InitGameMode()
+	GameRules.GameMode = CHCat()
+	GameRules.GameMode:InitGameMode()
 end
 
-function CAddonTemplateGameMode:InitGameMode()
-	print( "Template addon is loaded." )
-	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
-end
+function CHCat:InitGameMode()
+	print( "[CHCat] Addon has been initialised!" )
 
--- Evaluate the state of the game
-function CAddonTemplateGameMode:OnThink()
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		--print( "Template addon script is running." )
-	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then
-		return nil
+	print( "[CHCat] Finding Modules..." )
+	for _,module in pairs(self.required_modules) do
+		require(module)
 	end
-	return 1
 end
