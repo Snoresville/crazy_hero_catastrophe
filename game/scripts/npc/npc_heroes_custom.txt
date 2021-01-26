@@ -7,4 +7,5 @@
 	
 }
 
-#base ../vscripts/heroes/ember_spirit/ember_spirit.txt
+#base ../vscripts/heroes/ember_spirit/hero_data.txt
+#base ../vscripts/heroes/pangolier/hero_data.txt

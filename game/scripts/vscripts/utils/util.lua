@@ -12,7 +12,7 @@ end
 
 -- Spawning
 function CHCat:HandleHeroSpawn(hHero)
-    local spawnpoint = RandomVector(RandomFloat(0.1, 1))
+    local spawnpoint = RandomVector(RandomFloat(0.3, 1))
     spawnpoint.x = spawnpoint.x * self.map_x
     spawnpoint.y = spawnpoint.y * self.map_y
     spawnpoint.z = GetGroundHeight(spawnpoint, hero)

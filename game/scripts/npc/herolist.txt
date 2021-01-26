@@ -1,0 +1,5 @@
+"CustomHeroList"
+{
+	"npc_dota_hero_ember_spirit"		"1"
+    "npc_dota_hero_pangolier"		"1"
+}
