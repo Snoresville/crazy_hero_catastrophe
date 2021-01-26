@@ -61,13 +61,6 @@
 				"attacks_per_target"			"1 2 3 4"
 				"CalculateSpellDamageTooltip"	"0"
 			}
-
-			"05"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"AbilityCharges"		""
-				"LinkedSpecialBonus"	"special_bonus_unique_ember_spirit_4"
-			}
 		}
 	}
 }

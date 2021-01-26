@@ -19,3 +19,12 @@ function CHCat:HandleHeroSpawn(hHero)
 
     FindClearSpaceForUnit(hHero, spawnpoint, true)
 end
+
+-- Find Talent Value
+function CDOTA_BaseNPC:GetTalentValue(sTalentName)
+    local talent = self:FindAbilityByName(sTalentName)
+    if talent and talent:GetLevel() > 0 then
+        return talent:GetSpecialValueFor("value")
+    end
+    return 0
+end

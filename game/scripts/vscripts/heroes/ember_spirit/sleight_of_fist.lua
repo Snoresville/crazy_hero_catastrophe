@@ -1,7 +1,12 @@
 -- Sleight of Fist ability
 chc_ember_spirit_sleight_of_fist = chc_ember_spirit_sleight_of_fist or class({})
+LinkLuaModifier("modifier_chc_sleight_of_fist_intrinsic", "heroes/ember_spirit/sleight_of_fist", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_chc_sleight_of_fist_marker", "heroes/ember_spirit/sleight_of_fist", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_chc_sleight_of_fist_caster", "heroes/ember_spirit/sleight_of_fist", LUA_MODIFIER_MOTION_NONE)
+
+function chc_ember_spirit_sleight_of_fist:GetIntrinsicModifierName()
+    return "modifier_chc_sleight_of_fist_intrinsic"
+end
 
 function chc_ember_spirit_sleight_of_fist:GetAOERadius()
 	return self:GetSpecialValueFor("radius")
@@ -48,6 +53,43 @@ function chc_ember_spirit_sleight_of_fist:OnSpellStart()
 
     if #self.targets >= 1 and not caster:HasModifier("modifier_chc_sleight_of_fist_caster") then
         caster:AddNewModifier(caster, self, "modifier_chc_sleight_of_fist_caster", {})
+    end
+end
+
+-- Sleight of Fist target intrinsic
+modifier_chc_sleight_of_fist_intrinsic = modifier_chc_sleight_of_fist_intrinsic or class({})
+
+function modifier_chc_sleight_of_fist_intrinsic:IsDebuff() return false end
+function modifier_chc_sleight_of_fist_intrinsic:IsHidden() return true end
+function modifier_chc_sleight_of_fist_intrinsic:IsPurgable() return false end
+
+function modifier_chc_sleight_of_fist_intrinsic:DeclareFunctions()
+    return {
+		MODIFIER_EVENT_ON_ATTACK,
+	}
+end
+
+function modifier_chc_sleight_of_fist_intrinsic:OnAttack(kv)
+    if kv.attacker == self:GetParent() then
+        if RollPercentage(self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit")) then
+            self:GetParent():SetCursorPosition(self:GetParent():GetAbsOrigin())
+            self:GetAbility():OnSpellStart()
+        end
+
+        if RollPercentage(self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit_2")) then
+            local ability = self:GetParent():FindAbilityByName("ember_spirit_searing_chains")
+            if ability and ability:GetLevel() > 0 then
+                ability:OnSpellStart()
+            end
+        end
+
+        if RollPercentage(self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit_3")) then
+            local ability = self:GetParent():FindAbilityByName("ember_spirit_fire_remnant")
+            if ability and ability:GetLevel() > 0 then
+                self:GetParent():SetCursorPosition(self:GetParent():GetAbsOrigin())
+                ability:OnSpellStart()
+            end
+        end
     end
 end
 
@@ -134,6 +176,21 @@ function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
         self:Destroy()
     end
 
+    -- Fire Remnant Lock
+    if self:GetCaster():HasModifier("modifier_ember_spirit_fire_remnant") then
+        self.fire_remnant_lock = true
+        self.starting_position = self:GetParent():GetAbsOrigin()
+        ParticleManager:SetParticleControl(self.sleight_caster_particle, 0, self.starting_position)
+        ParticleManager:SetParticleControlForward(self.sleight_caster_particle, 1, self:GetCaster():GetForwardVector())
+    end
+    if self.fire_remnant_lock then
+        if not self:GetCaster():HasModifier("modifier_ember_spirit_fire_remnant") then
+            self.fire_remnant_lock = false
+        else
+            return
+        end
+    end
+
     local current_target
     for i = 1, #self:GetAbility().targets do
         local target = EntIndexToHScript(self:GetAbility().targets[1])
@@ -164,6 +221,7 @@ function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
 
         -- Perform the attack
         caster:SetAbsOrigin(current_target:GetAbsOrigin() + original_direction * 50)
+        caster:SetForwardVector(original_direction)
         caster:PerformAttack(current_target, true, true, true, false, false, false, false)
     end
 
