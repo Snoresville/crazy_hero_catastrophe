@@ -1,0 +1,73 @@
+"DOTAAbilities"
+{
+	//=================================================================================================================
+	// Ember Spirit: Sleight of Fist (Lua version)
+	//=================================================================================================================
+	"chc_ember_spirit_sleight_of_fist"
+	{
+		// Ability Technical Aspect
+		// base script folder	: scripts/vscripts
+		// base texture folder	: resource/flash3/images/spellicons
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"ability_lua"
+		"ScriptFile"					"heroes/ember_spirit/sleight_of_fist"
+		"AbilityTextureName"			"sleight_of_fist"
+		"FightRecapLevel"				"1"
+		"MaxLevel"						"4"
+		
+		// Ability General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_YES"
+
+		// Ability Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"700"
+		"AbilityCastPoint"				"0"
+
+		// Ability Resource
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"18 14 10 6"
+		"AbilityManaCost"				"50"	
+
+		// Special
+		//--------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"radius"					"250 350 450 550"
+			}
+			
+			"02"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"bonus_hero_damage"			"40 80 120 160"
+				"LinkedSpecialBonus"			"special_bonus_unique_ember_spirit_6"
+				"CalculateSpellDamageTooltip"	"0"
+			}
+						
+			"03"
+			{
+				"var_type"						"FIELD_FLOAT"
+				"attack_interval"				"0.2"
+			}
+
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"attacks_per_target"			"1 2 3 4"
+				"CalculateSpellDamageTooltip"	"0"
+			}
+
+			"05"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"AbilityCharges"		""
+				"LinkedSpecialBonus"	"special_bonus_unique_ember_spirit_4"
+			}
+		}
+	}
+}

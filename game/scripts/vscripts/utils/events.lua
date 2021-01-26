@@ -1,15 +1,15 @@
 CHCat:SendGamemodeStatus("events.lua loaded!")
 
 function CHCat:InitGameEvents()
-    ListenToGameEvent("npc_spawned",        Dynamic_Wrap(CHCat, "OnNPCSpawned"), self)
+    ListenToGameEvent("dota_player_spawned",        Dynamic_Wrap(CHCat, "OnNPCSpawned"), self)
     ListenToGameEvent("dota_player_killed", Dynamic_Wrap(CHCat, "OnHeroKilled"), self)
 end
 
 function CHCat:OnNPCSpawned(keys)
-    local npc = EntIndexToHScript(keys.entindex)
+    local hero = PlayerResource:GetSelectedHeroEntity(keys.PlayerID)
 
-    if npc:IsRealHero() then
-        self:HandleHeroSpawn(npc)
+    if hero:IsRealHero() then
+        self:HandleHeroSpawn(hero)
     end
 end
 
