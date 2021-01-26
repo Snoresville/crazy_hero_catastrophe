@@ -38,6 +38,7 @@ function VectorTarget:OrderFilter(event)
 			ability.vectorTargetPosition = Vector(event.position_x, event.position_y, 0)
 			local position = ability.vectorTargetPosition
 			local position2 = ability.vectorTargetPosition2
+			if position == nil or position2 == nil then return true end
 			local direction = (position2 - position):Normalized()
 
 			--Change direction if just clicked on the same position
