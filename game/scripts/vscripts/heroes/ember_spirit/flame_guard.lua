@@ -98,5 +98,6 @@ function modifier_chc_flame_guard_aura:GetModifierAttackSpeedBonus_Constant()
 end
 
 function modifier_chc_flame_guard_aura:GetModifierIgnoreMovespeedLimit()
+	if IsClient() then return 1 end
 	return self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit_4")
 end

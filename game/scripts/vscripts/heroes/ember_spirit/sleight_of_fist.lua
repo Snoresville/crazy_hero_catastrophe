@@ -72,7 +72,7 @@ end
 function modifier_chc_sleight_of_fist_intrinsic:OnAttack(kv)
     if kv.attacker == self:GetParent() then
         if RollPercentage(self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit")) then
-            self:GetParent():SetCursorPosition(self:GetParent():GetAbsOrigin())
+            self:GetParent():SetCursorPosition(kv.unit:GetAbsOrigin())
             self:GetAbility():OnSpellStart()
         end
 
@@ -86,7 +86,7 @@ function modifier_chc_sleight_of_fist_intrinsic:OnAttack(kv)
         if RollPercentage(self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit_3")) then
             local ability = self:GetParent():FindAbilityByName("ember_spirit_fire_remnant")
             if ability and ability:GetLevel() > 0 then
-                self:GetParent():SetCursorPosition(self:GetParent():GetAbsOrigin())
+                self:GetParent():SetCursorPosition(kv.unit:GetAbsOrigin())
                 ability:OnSpellStart()
             end
         end
