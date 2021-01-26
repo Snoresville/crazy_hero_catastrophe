@@ -137,19 +137,17 @@ function modifier_chc_sleight_of_fist_caster:OnDestroy()
 end
 
 function modifier_chc_sleight_of_fist_caster:CheckState()
-	if IsServer() then
-		local state = {
-			[MODIFIER_STATE_NO_UNIT_COLLISION] = true,
-            [MODIFIER_STATE_ATTACK_IMMUNE] = true,
-			[MODIFIER_STATE_NO_HEALTH_BAR] = true,
-			[MODIFIER_STATE_MAGIC_IMMUNE] = true,
-			--[MODIFIER_STATE_ROOTED] = true,
-			[MODIFIER_STATE_UNSELECTABLE] = true,
-			[MODIFIER_STATE_DISARMED] = true
-		}
+	local state = {
+        [MODIFIER_STATE_NO_UNIT_COLLISION] = true,
+        [MODIFIER_STATE_ATTACK_IMMUNE] = true,
+        [MODIFIER_STATE_NO_HEALTH_BAR] = true,
+        [MODIFIER_STATE_MAGIC_IMMUNE] = true,
+        --[MODIFIER_STATE_ROOTED] = true,
+        [MODIFIER_STATE_UNSELECTABLE] = true,
+        [MODIFIER_STATE_DISARMED] = true
+    }
 
-		return state
-	end
+    return state
 end
 
 function modifier_chc_sleight_of_fist_caster:DeclareFunctions()
