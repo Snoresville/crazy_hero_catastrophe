@@ -3,14 +3,14 @@ LinkLuaModifier("modifier_chc_flame_guard_aura", "heroes/ember_spirit/flame_guar
 
 function chc_ember_spirit_flame_guard:OnSpellStart()
 	if IsServer() then
-		
+		local caster = self:GetCaster()
 		caster:StartGesture(ACT_DOTA_CAST_ABILITY_3)
 
 		-- Caster version
 		caster:EmitSound("Hero_EmberSpirit.FlameGuard.Cast")
 		caster:EmitSound("Hero_EmberSpirit.FlameGuard.Loop")
 		caster:RemoveModifierByName("modifier_chc_flame_guard_aura")
-		caster:AddNewModifier(caster, self, "modifier_chc_flame_guard_aura", {})
+		caster:AddNewModifier(caster, self, "modifier_chc_flame_guard_aura", {duration = self:GetSpecialValueFor("duration")})
 	end
 end
 
@@ -99,5 +99,5 @@ end
 
 function modifier_chc_flame_guard_aura:GetModifierIgnoreMovespeedLimit()
 	if IsClient() then return end
-	return self:GetParent():FindTalentValue("special_bonus_unique_chc_ember_spirit_4")
+	return self:GetParent():GetTalentValue("special_bonus_unique_chc_ember_spirit_4")
 end
