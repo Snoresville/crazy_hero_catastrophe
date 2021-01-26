@@ -11,4 +11,6 @@ function CHCat:InitGameRules()
     
     gamemode:SetBuybackEnabled(false)
     gamemode:SetMaximumAttackSpeed(2000)
+    gamemode:SetRandomHeroBonusItemGrantDisabled(true)
+    
 end

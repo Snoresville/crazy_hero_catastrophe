@@ -7,12 +7,15 @@
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
-		"ID"							"5605"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+        "BaseClass"						"ability_lua"
+		"ScriptFile"					"heroes/ember_spirit/flame_guard"
+		"AbilityTextureName"			"ember_spirit_flame_guard"
+
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"SpellDispellableType"			"SPELL_DISPELLABLE_YES"
-		"AbilitySound"					"Hero_EmberSpirit.FlameGuard.Cast"
+
 
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -63,7 +66,12 @@
 			"06"
 			{
 				"var_type"						"FIELD_INTEGER"
-				"blind_pct"				"50"
+				"buff_attack_speed"				"1 2 3 4"
+			}
+			"07"
+			{
+				"var_type"						"FIELD_INTEGER"
+				"buff_movement_speed"			"1 2 3 4"
 			}
 		}
 		"AbilityCastAnimation"		"ACT_DOTA_CAST_ABILITY_3"

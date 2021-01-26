@@ -7,3 +7,4 @@
 
 #base ../vscripts/heroes/ember_spirit/talents.txt
 #base ../vscripts/heroes/ember_spirit/sleight_of_fist.txt
+#base ../vscripts/heroes/ember_spirit/flame_guard.txt
