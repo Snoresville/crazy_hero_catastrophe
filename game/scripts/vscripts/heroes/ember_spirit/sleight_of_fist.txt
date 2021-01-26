@@ -11,7 +11,7 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"						"ability_lua"
 		"ScriptFile"					"heroes/ember_spirit/sleight_of_fist"
-		"AbilityTextureName"			"sleight_of_fist"
+		"AbilityTextureName"			"ember_spirit_sleight_of_fist"
 		"FightRecapLevel"				"1"
 		"MaxLevel"						"4"
 		
@@ -29,7 +29,7 @@
 		// Ability Resource
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityCooldown"				"18 14 10 6"
-		"AbilityManaCost"				"50"	
+		"AbilityManaCost"				"50"
 
 		// Special
 		//--------------------------------------------------------------------------------------------------------------

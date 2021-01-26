@@ -1,5 +1,5 @@
 -- Sleight of Fist ability
-chc_ember_spirit_sleight_of_fist = chc_ember_spirit_sleight_of_fist or class ({})
+chc_ember_spirit_sleight_of_fist = chc_ember_spirit_sleight_of_fist or class({})
 LinkLuaModifier("modifier_chc_sleight_of_fist_marker", "heroes/ember_spirit/sleight_of_fist", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_chc_sleight_of_fist_caster", "heroes/ember_spirit/sleight_of_fist", LUA_MODIFIER_MOTION_NONE)
 
@@ -17,7 +17,7 @@ end
 function chc_ember_spirit_sleight_of_fist:CollectTargets(vLocation)
     local caster = self:GetCaster()
     local effect_radius = self:GetSpecialValueFor("radius")
-    local attack_interval = self:GetSpecialValueFor("attack_interval") * caster:GetAttacksPerSecond()
+    local attack_interval = self:GetSpecialValueFor("attack_interval") / caster:GetAttacksPerSecond()
     self.targets = self.targets or {}
 
     -- Play primary cast sound/particle
@@ -28,10 +28,10 @@ function chc_ember_spirit_sleight_of_fist:CollectTargets(vLocation)
     ParticleManager:ReleaseParticleIndex(cast_pfx)
         
     -- Mark targets to hit
-    local nearby_enemies = FindUnitsInRadius(caster:GetTeamNumber(), target_loc, nil, effect_radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_BASIC, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE + DOTA_UNIT_TARGET_FLAG_NO_INVIS, FIND_ANY_ORDER, false)
+    local nearby_enemies = FindUnitsInRadius(caster:GetTeamNumber(), vLocation, nil, effect_radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_BASIC, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE + DOTA_UNIT_TARGET_FLAG_NO_INVIS, FIND_ANY_ORDER, false)
     for _, enemy in pairs(nearby_enemies) do
         self.targets[#self.targets + 1] = enemy:GetEntityIndex()
-        enemy:AddNewModifier(caster, self, "modifier_chc_sleight_of_fist_marker", {duration = (#sleight_targets - 1) * attack_interval})
+        enemy:AddNewModifier(caster, self, "modifier_chc_sleight_of_fist_marker", {duration = (#self.targets - 1) * attack_interval})
     end
 end
 
@@ -46,13 +46,13 @@ function chc_ember_spirit_sleight_of_fist:OnSpellStart()
         self:CollectTargets(target_loc)
     end
 
-    if self.targets >= 1 and not caster:HasModifier("modifier_chc_sleight_of_fist_caster") then
+    if #self.targets >= 1 and not caster:HasModifier("modifier_chc_sleight_of_fist_caster") then
         caster:AddNewModifier(caster, self, "modifier_chc_sleight_of_fist_caster", {})
     end
 end
 
 -- Sleight of Fist target marker
-modifier_chc_sleight_of_fist_marker = modifier_chc_sleight_of_fist_marker or class ({})
+modifier_chc_sleight_of_fist_marker = modifier_chc_sleight_of_fist_marker or class({})
 
 function modifier_chc_sleight_of_fist_marker:IsDebuff() return true end
 function modifier_chc_sleight_of_fist_marker:IsHidden() return true end
@@ -67,14 +67,13 @@ function modifier_chc_sleight_of_fist_marker:GetEffectAttachType()
 end
 
 -- Sleight of Fist caster modifier
-modifier_chc_sleight_of_fist_caster = modifier_chc_sleight_of_fist_caster or class ({})
+modifier_chc_sleight_of_fist_caster = modifier_chc_sleight_of_fist_caster or class({})
 
 function modifier_chc_sleight_of_fist_caster:IsPurgable() return false end
 function modifier_chc_sleight_of_fist_caster:OnCreated()
 	if IsServer() then
 		-- The particles will properly attach if PATTACH_CUSTOMORIGIN is used instead of PATTACH_WORLDORIGIN, but there is a whole other subset of issues concerning invisible particles if the caster goes invisible or out of sight so this may be the lesser of two evils for now...
         self.starting_position = self:GetParent():GetAbsOrigin()
-        self.attack_interval = self:GetAbility():GetSpecialValueFor("attack_interval") * self:GetCaster():GetAttacksPerSecond()
         self.sleight_caster_particle = ParticleManager:CreateParticle("particles/units/heroes/hero_ember_spirit/ember_spirit_sleight_of_fist_caster.vpcf", PATTACH_WORLDORIGIN, self:GetCaster())
 		ParticleManager:SetParticleControl(self.sleight_caster_particle, 0, self.starting_position)
 		ParticleManager:SetParticleControlForward(self.sleight_caster_particle, 1, self:GetCaster():GetForwardVector())
@@ -131,15 +130,17 @@ function modifier_chc_sleight_of_fist_caster:GetModifierIgnoreCastAngle()
 end
 
 function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
-    if #sleight_targets <= 0 then
+    if #self:GetAbility().targets <= 0 then
         self:Destroy()
     end
 
     local current_target
     for i = 1, #self:GetAbility().targets do
-        local target = self:GetAbility().targets[1]
+        local target = EntIndexToHScript(self:GetAbility().targets[1])
         if target and not target:IsNull() and target:IsAlive() and not target:IsInvisible() and not target:IsAttackImmune() then
             current_target = target
+            table.remove(self:GetAbility().targets, 1)
+            break
         else
             table.remove(self:GetAbility().targets, 1)
         end
@@ -148,6 +149,7 @@ function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
     if current_target then
         local previous_position = self:GetParent():GetAbsOrigin()
         local original_direction = (current_target:GetAbsOrigin() - previous_position):Normalized()
+        local caster = self:GetCaster()
 
         -- Particles and sound
         caster:EmitSound("Hero_EmberSpirit.SleightOfFist.Damage")
@@ -166,11 +168,15 @@ function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
     end
 
     self:StartIntervalThink(-1)
-    self:StartIntervalThink(self.attack_interval)
+    self:StartIntervalThink(self:GetAbility():GetSpecialValueFor("attack_interval") / self:GetCaster():GetAttacksPerSecond())
 end
 
 function modifier_chc_sleight_of_fist_caster:OnRemoved()
+    if IsClient() then return end
     self:GetParent():RemoveNoDraw()
     self:GetAbility():SetActivated(true)
     FindClearSpaceForUnit(self:GetParent(), self.starting_position, true)
+
+    ParticleManager:DestroyParticle(self.sleight_caster_particle, false)
+	ParticleManager:ReleaseParticleIndex(self.sleight_caster_particle)
 end
