@@ -194,7 +194,7 @@ function modifier_chc_sleight_of_fist_caster:OnIntervalThink()
     local current_target
     for i = 1, #self:GetAbility().targets do
         local target = EntIndexToHScript(self:GetAbility().targets[1])
-        if target and not target:IsNull() and target:IsAlive() and not target:IsInvisible() and not target:IsAttackImmune() then
+        if target and (not target:IsNull() and target:IsAlive() and not target:IsInvisible() and not target:IsAttackImmune()) then
             current_target = target
             table.remove(self:GetAbility().targets, 1)
             break
@@ -234,6 +234,7 @@ function modifier_chc_sleight_of_fist_caster:OnRemoved()
     self:GetParent():RemoveNoDraw()
     self:GetAbility():SetActivated(true)
     FindClearSpaceForUnit(self:GetParent(), self.starting_position, true)
+    self:GetAbility().targets = {}
 
     ParticleManager:DestroyParticle(self.sleight_caster_particle, false)
 	ParticleManager:ReleaseParticleIndex(self.sleight_caster_particle)
