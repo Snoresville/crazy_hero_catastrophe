@@ -9,6 +9,7 @@ CHCat.required_modules = {
 	"utils/gamerules",
 	"utils/util",
 	"utils/events",
+	"libs/vector_targeting",
 }
 
 function Precache( context )
